@@ -7,6 +7,8 @@
 
 <body>
     <h1>Web Board</h1>
+    <a href="{% url 'home' %}">Home</a> /
+    <a href="{% url 'signup' %}">Sign up</a>
     <hr>
     {% block content %}
     {% endblock %}
