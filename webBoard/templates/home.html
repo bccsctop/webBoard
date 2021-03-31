@@ -6,4 +6,9 @@
     <p>
         <strong>Total users registered :</strong> {{ count }}
     </p>
+
+    <form action="{% url 'create_topic' %}">
+        <input type="submit" value="Create Topic" />
+    </form>
+    
 {% endblock %}
