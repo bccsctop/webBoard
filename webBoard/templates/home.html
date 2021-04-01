@@ -10,5 +10,21 @@
     <form action="{% url 'create_topic' %}">
         <input type="submit" value="Create Topic" />
     </form>
-    
+    <div>
+        <ul class="list-group">
+            {% for item in topic_all %}
+                {{ item.topicid }}
+                {{ item.title }}
+                {{ item.content }}
+                <form action="{% url 'create_comment' %}">
+                    <input type="number" name="topicid" value = '{{ item.topicid }}' placeholder="{{ item.topicid }}">
+                    <input type="submit" value="Create Comment" />
+                </form>
+                
+                
+
+            {% endfor %}
+        </ul>
+
+    </div>
 {% endblock %}
