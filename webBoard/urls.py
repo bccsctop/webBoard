@@ -23,4 +23,5 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('create_topic', views.create_topic, name = 'create_topic'),
+    path('create_comment', views.create_comment, name = 'create_comment'),
 ]
