@@ -49,7 +49,6 @@ def create_topic(request):
     })
 
 def create_comment(request,topic_id):
-    print(topic_id)
     select_topic = Topic.objects.get(topicid=topic_id)
 
     if not request.user.is_authenticated:
@@ -79,6 +78,7 @@ def view_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
 
     comment_topic = Comment.objects.filter(comtopicid=topic_id)
+
     return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic})
 
 def edit_topic(request,topic_id):

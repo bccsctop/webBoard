@@ -5,9 +5,14 @@
     <h1>{{select_topic}}</h1>
     <ul>{{select_topic.content}}</ul>
 
-    <strong>account : {{ select_topic.user_name }}</strong> / 
-    <a href="{% url 'edit_topic' select_topic.topicid %}">Edit</a> /
-    <a href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
+    <strong>account : {{ select_topic.user_name }}</strong> 
+    
+    {% if user.is_authenticated %}
+        {% if user.username|striptags == select_topic.user_name|striptags %}
+            <a href="{% url 'edit_topic' select_topic.topicid %}">Edit</a> /
+            <a href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
+        {% endif %}
+    {% endif %}
 
     <br><br>
 
@@ -16,9 +21,13 @@
         {% for comment in comment_topic %}
             <p>{{ comment }}</p>
             <strong>account : {{comment.comuserid}}</strong>
-            <a href="{% url 'edit_comment' comment.commentid %}">Edit</a> /
-            <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
-            <br>
+            {% if user.is_authenticated %}
+                {% if user.username|striptags == comment.comuserid|striptags %}
+                    <a href="{% url 'edit_comment' comment.commentid %}">Edit</a> /
+                    <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
+                    <br>
+                {% endif %}
+            {% endif %}
         {% endfor %}
     </ul>
     <br>
