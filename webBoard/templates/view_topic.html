@@ -3,9 +3,22 @@
 {% block content %}
 
     <h1>{{select_topic}}</h1>
-    <p>{{select_topic.content}}</p>
+    <ul>{{select_topic.content}}</ul>
 
-    <h2>Create Comment #{{ select_topic.topicid }}</h2>
+    <strong>account : {{ select_topic.user_name }}</strong>
+
+    <br><br>
+
+    <h4>Comment</h4>
+    <ul class="list-group">
+        {% for comment in comment_topic %}
+            <p>{{ comment }}</p>
+        {% endfor %}
+    </ul>
+
+    <br><br>
+
+    <h4>Create Comment #{{ select_topic.topicid }}</h4>
         <form method="POST" action="{% url 'create_comment' %}">
             {% csrf_token %}
             {{ form.as_p }}

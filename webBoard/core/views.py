@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from webBoard.core.forms import create_topic_form , create_comment_form
-from webBoard.core.models import Topic , Comment
+from webBoard.core.models import *
 
 # Create your views here.
 def home(request):
@@ -73,4 +73,6 @@ def view_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
     form = create_comment_form()
 
-    return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic})
+    comment_topic = Comment.objects.filter(comtopicid=topic_id)
+
+    return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic, 'comment_topic' : comment_topic})
