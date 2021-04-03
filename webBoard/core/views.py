@@ -99,3 +99,20 @@ def edit_topic(request,topic_id):
     else:
         form = edit_topic_form()
         return render(request, 'edit_topic.html', {'form' : form, 'select_topic' : select_topic})
+
+def delete_topic(request, topic_id):
+    print("Here Delete")
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("accounts/login")
+    else:
+        edit_title = request.POST.get('title')
+        edit_content = request.POST.get('content')
+        
+        delete_topic = Topic.objects.filter(topicid=topic_id).delete()
+        delete_comment = Comment.objects.filter(comtopicid=topic_id).delete()
+
+        return HttpResponseRedirect("/")
+
+
+
