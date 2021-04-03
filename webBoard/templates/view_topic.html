@@ -12,11 +12,11 @@
     <h4>Comment</h4>
     <ul class="list-group">
         {% for comment in comment_topic %}
-            <p>{{ comment }}</p>
+            <p>{{ comment }}  {{comment.comuserid}}</p>
+            <strong>account : {{comment.comuserid}}</strong>
+            <br><br>
         {% endfor %}
     </ul>
-
-    <br><br>
 
     <h4>Create Comment #{{ select_topic.topicid }}</h4>
         <form method="POST" action="{% url 'create_comment' %}">

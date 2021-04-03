@@ -34,7 +34,7 @@ def create_topic(request):
         if form.is_valid():
             topic = form.save(commit=False)
             topic.user_name = request.user
-
+            topic.like = 0
             topic.save()
         return HttpResponseRedirect("/")
     else:
@@ -53,6 +53,7 @@ def create_comment(request):
         idtop = request.POST.get('fkid')
         tpid = Topic.objects.get(topicid= idtop)
         form = create_comment_form(request.POST)
+
         if form.is_valid():
             comment = form.save(commit=False)
             comment.comuserid = request.user
@@ -74,5 +75,4 @@ def view_topic(request,topic_id):
     form = create_comment_form()
 
     comment_topic = Comment.objects.filter(comtopicid=topic_id)
-
     return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic, 'comment_topic' : comment_topic})
