@@ -5,7 +5,8 @@
     <h1>{{select_topic}}</h1>
     <ul>{{select_topic.content}}</ul>
 
-    <strong>account : {{ select_topic.user_name }}</strong>
+    <strong>account : {{ select_topic.user_name }}</strong> / 
+    <a href="{% url 'edit_topic' select_topic.topicid %}">Edit</a>
 
     <br><br>
 

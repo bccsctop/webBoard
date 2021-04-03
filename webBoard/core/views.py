@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
-from webBoard.core.forms import create_topic_form , create_comment_form
+from webBoard.core.forms import *
 from webBoard.core.models import *
 
 # Create your views here.
@@ -62,7 +62,6 @@ def create_comment(request):
             comment.save()
 
         url_redirect = '/topic/' + str(idtop)
-        print(url_redirect)
         return HttpResponseRedirect(url_redirect)
     else:
         form = create_comment_form()
@@ -76,3 +75,21 @@ def view_topic(request,topic_id):
 
     comment_topic = Comment.objects.filter(comtopicid=topic_id)
     return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic, 'comment_topic' : comment_topic})
+
+def edit_topic(request,topic_id):
+    select_topic = Topic.objects.get(topicid=topic_id)
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("accounts/login")
+    elif request.method == 'POST':
+        form = edit_topic_form(request.POST)
+        if form.is_valid():
+            edit_title = request.POST.get('title')
+            edit_content = request.POST.get('content')
+            
+            edit_topic = Topic.objects.filter(topicid=topic_id).update(title=edit_title, content=edit_content)
+
+        url_redirect = '/topic/' + str(select_topic.topicid)
+        return HttpResponseRedirect(url_redirect)
+    else:
+        form = edit_topic_form()
+        return render(request, 'edit_topic.html', {'form' : form, 'select_topic' : select_topic})

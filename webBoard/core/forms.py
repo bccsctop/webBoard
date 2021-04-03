@@ -6,8 +6,6 @@ class create_topic_form(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ['title', 'content']
-   # title = forms.CharField(max_length=50)
-    #content = forms.CharField(max_length=150)
 
 class TopicForm(ModelForm):
     class Meta:
@@ -23,3 +21,13 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+class edit_topic_form(forms.ModelForm):
+    class Meta:
+        model = Topic
+        fields = ['title', 'content']
+
+class EditTopicForm(ModelForm):
+    class Meta:
+        model = Topic
+        fields = ['title', 'content']

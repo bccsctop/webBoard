@@ -12,8 +12,6 @@ class Topic (models.Model):
     def __str__(self):
         return self.title
 
-
-
 class Comment (models.Model):
     commentid = models.AutoField(primary_key=True)
     content = models.CharField(max_length=150)
