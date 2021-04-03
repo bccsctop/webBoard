@@ -26,5 +26,6 @@ urlpatterns = [
     path('create_comment/<str:topic_id>', views.create_comment, name = 'create_comment'),
     path('topic/<str:topic_id>', views.view_topic, name = 'view_topic'),
     path('edit_topic/<str:topic_id>', views.edit_topic, name = 'edit_topic'),
-    path('delete_topic/<str:topic_id>', views.delete_topic, name = 'delete_topic')
+    path('delete_topic/<str:topic_id>', views.delete_topic, name = 'delete_topic'),
+    path('edit_comment/<str:comment_id>', views.edit_comment, name = 'edit_comment'),
 ]

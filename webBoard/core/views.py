@@ -77,10 +77,9 @@ def create_comment(request,topic_id):
 
 def view_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
-    form = create_comment_form()
 
     comment_topic = Comment.objects.filter(comtopicid=topic_id)
-    return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic, 'comment_topic' : comment_topic})
+    return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic})
 
 def edit_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
@@ -101,8 +100,6 @@ def edit_topic(request,topic_id):
         return render(request, 'edit_topic.html', {'form' : form, 'select_topic' : select_topic})
 
 def delete_topic(request, topic_id):
-    print("Here Delete")
-
     if not request.user.is_authenticated:
         return HttpResponseRedirect("accounts/login")
     else:
@@ -114,5 +111,29 @@ def delete_topic(request, topic_id):
 
         return HttpResponseRedirect("/")
 
+def edit_comment(request, comment_id):
+    select_comment = Comment.objects.get(commentid=comment_id)
+    get_id_topic = Comment.objects.get(commentid=comment_id)
+    select_topic = Topic.objects.get(title=get_id_topic.comtopicid)
 
+    topic_id = select_topic.topicid
+    select_topic = Topic.objects.get(topicid=topic_id)
+
+    comment_topic = Comment.objects.filter(comtopicid=topic_id)
+
+
+    if request.method == 'POST':
+        edit_content = request.POST.get('content')
+        edit_comment = Comment.objects.filter(commentid=comment_id).update(content=edit_content)
+
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
+
+    
+    return render(request, 'edit_comment.html', { 'select_topic' : select_topic, 
+    'comment_topic' : comment_topic, 
+    'select_comment' : select_comment})
+
+
+    
 
