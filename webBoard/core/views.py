@@ -33,6 +33,11 @@ def create_topic(request):
         form = create_topic_form(request.POST)
         if form.is_valid():
             topic = form.save(commit=False)
+            create_title = request.POST.get('title')
+            create_content = request.POST.get('content')
+
+            topic.title = create_title
+            topic.content = create_content
             topic.user_name = request.user
             topic.like = 0
             topic.save()
@@ -43,25 +48,26 @@ def create_topic(request):
         'form': form
     })
 
-def create_comment(request):
-    idtop = request.POST.get('fkid')
-    select_topic = Topic.objects.get(topicid=idtop)
+def create_comment(request,topic_id):
+    print(topic_id)
+    select_topic = Topic.objects.get(topicid=topic_id)
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect("accounts/login")
     elif request.method == 'POST':
-        idtop = request.POST.get('fkid')
-        tpid = Topic.objects.get(topicid= idtop)
+        tpid = Topic.objects.get(topicid= topic_id)
         form = create_comment_form(request.POST)
 
         if form.is_valid():
+            create_comment = request.POST.get('content')
             comment = form.save(commit=False)
             comment.comuserid = request.user
             comment.comtopicid = tpid
+            comment.content = create_comment
             comment.like = 0
             comment.save()
 
-        url_redirect = '/topic/' + str(idtop)
+        url_redirect = '/topic/' + str(topic_id)
         return HttpResponseRedirect(url_redirect)
     else:
         form = create_comment_form()

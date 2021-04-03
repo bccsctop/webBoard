@@ -18,12 +18,14 @@
             <br><br>
         {% endfor %}
     </ul>
+    <br>
 
     <h4>Create Comment #{{ select_topic.topicid }}</h4>
-        <form method="POST" action="{% url 'create_comment' %}">
+        <form method="POST" action="{% url 'create_comment' select_topic.topicid %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="hidden" name="fkid" value = '{{ select_topic.topicid }}' >
+            <textarea style="font-size: 12pt" rows="4" cols="50" name="content"></textarea>
+            <br>
+
             <button type="submit">Create</button>
         </form>
 

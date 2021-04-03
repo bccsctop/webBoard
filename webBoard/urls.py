@@ -23,7 +23,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('create_topic', views.create_topic, name = 'create_topic'),
-    path('create_comment', views.create_comment, name = 'create_comment'),
+    path('create_comment/<str:topic_id>', views.create_comment, name = 'create_comment'),
     path('topic/<str:topic_id>', views.view_topic, name = 'view_topic'),
     path('edit_topic/<str:topic_id>', views.edit_topic, name = 'edit_topic'),
 ]
