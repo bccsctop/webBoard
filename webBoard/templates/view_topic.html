@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>{{select_topic}}</h1>
+    <p>{{select_topic.content}}</p>
+
+    <h2>Create Comment #{{ select_topic.topicid }}</h2>
+        <form method="POST" action="{% url 'create_comment' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="fkid" value = '{{ select_topic.topicid }}' >
+            <button type="submit">Create</button>
+        </form>
+
+{% endblock %}
