@@ -17,6 +17,7 @@
             <p>{{ comment }}</p>
             <strong>account : {{comment.comuserid}}</strong>
             <a href="{% url 'edit_comment' comment.commentid %}">Edit</a> /
+            <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
             <br>
         {% endfor %}
     </ul>

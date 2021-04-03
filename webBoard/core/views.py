@@ -103,8 +103,8 @@ def delete_topic(request, topic_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect("accounts/login")
     else:
-        edit_title = request.POST.get('title')
-        edit_content = request.POST.get('content')
+        #edit_title = request.POST.get('title')
+        #edit_content = request.POST.get('content')
         
         delete_topic = Topic.objects.filter(topicid=topic_id).delete()
         delete_comment = Comment.objects.filter(comtopicid=topic_id).delete()
@@ -134,6 +134,18 @@ def edit_comment(request, comment_id):
     'comment_topic' : comment_topic, 
     'select_comment' : select_comment})
 
+def delete_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("accounts/login")
+    else:
+        get_id_topic = Comment.objects.get(commentid=comment_id)
+        select_topic = Topic.objects.get(title=get_id_topic.comtopicid)
+
+        topic_id = select_topic.topicid
+        delete_comment = Comment.objects.filter(commentid=comment_id).delete()
+        
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
 
     
 
