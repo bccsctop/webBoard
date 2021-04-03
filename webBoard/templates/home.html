@@ -11,17 +11,12 @@
         <input type="submit" value="Create Topic" />
     </form>
     <div>
+
         <ul class="list-group">
             {% for item in topic_all %}
-                {{ item.topicid }}
-                {{ item.title }}
-                {{ item.content }}
-                <form action="{% url 'create_comment' %}" enctype="multipart/form-data">
-                    <input type="hidden" name="topicid" value = '{{ item.topicid }}' >
-                    <input type="submit" value="Create Comment" />
-                </form>
+                <a href="{% url 'view_topic' item.topicid %}">{{ item.title }}</a>
+                <br><br>
             {% endfor %}
-
         </ul>
 
     </div>

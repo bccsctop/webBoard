@@ -30,9 +30,6 @@ def create_topic(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect("accounts/login")
     elif request.method == 'POST':
-        #uname = request.user.username
-        #print("Hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-        #print(uname)
         form = create_topic_form(request.POST)
         if form.is_valid():
             topic = form.save(commit=False)
@@ -47,7 +44,9 @@ def create_topic(request):
     })
 
 def create_comment(request):
-    topic_idoo = request.GET.get('topicid')
+    idtop = request.POST.get('fkid')
+    select_topic = Topic.objects.get(topicid=idtop)
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect("accounts/login")
     elif request.method == 'POST':
@@ -60,9 +59,18 @@ def create_comment(request):
             comment.comtopicid = tpid
             comment.like = 0
             comment.save()
-        return HttpResponseRedirect("/")
+
+        url_redirect = '/topic/' + str(idtop)
+        print(url_redirect)
+        return HttpResponseRedirect(url_redirect)
     else:
         form = create_comment_form()
-        return render(request, 'create_comment.html', {
-        'form': form , 'topic_id' : topic_idoo ,
+        return render(request, 'view_topic.html', {
+        'form': form , 'select_topic' : select_topic
     })
+
+def view_topic(request,topic_id):
+    select_topic = Topic.objects.get(topicid=topic_id)
+    form = create_comment_form()
+
+    return render(request, 'view_topic.html', { 'form': form , 'select_topic' : select_topic})
