@@ -37,3 +37,17 @@ class Tag (models.Model):
 
     def __str__(self):
         return self.tag
+
+class LikeTopic(models.Model):
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
+    like_topicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.userid)
+
+class LikeComment(models.Model):
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
+    like_commentid = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.userid)

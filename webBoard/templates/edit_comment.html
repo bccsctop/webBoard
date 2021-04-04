@@ -8,15 +8,28 @@
         <h1>{{select_topic}}</h1>
         <ul>{{select_topic.content}}</ul>
         <hr>
+
+        {% if user_like|striptags == user.username|striptags %}
+            <a class="btn btn-outline-primary" href="{% url 'unlike_topic' select_topic.topicid %}">Unlike</a>
+            - {{ select_topic.like }} Likes
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'like_topic' select_topic.topicid %}">Like</a>
+            - {{ select_topic.like }} Likes
+        {% endif %}
+
         <div style="float: right;">
-                <strong>account : {{ select_topic.user_name }}</strong> 
+                <p>By : {{ select_topic.user_name }}
                 {% if user.is_authenticated %}
                     {% if user.username|striptags == select_topic.user_name|striptags %}
-                        <a class="btn btn-primary" href="{% url 'edit_topic' select_topic.topicid %}">Edit</a>
-                        <a class="btn btn-secondary" href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
-                        <p style="text-align:right;">asked : {{time_create_topic}}</p>
+                    (
+                        <a href="{% url 'edit_topic' select_topic.topicid %}">Edit</a>
+                    |
+                        <a href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
+                    )
+                        <p style="text-align:right;">asked : {{time_create_topic.date}}</p>
                     {% endif %}
                 {% endif %}
+                </p> 
         </div>
     </div>
 </div>
@@ -30,14 +43,18 @@
                 <div class="card-body">
                     <p>{{ comment }}</p>
                     <hr>
-                    <strong>account : {{comment.comuserid}}</strong>
+                    <p>By : {{comment.comuserid}}
                     {% if user.is_authenticated %}
                         {% if user.username|striptags == comment.comuserid|striptags %}
-                            <a class="btn btn-primary" href="{% url 'edit_comment' comment.commentid %}">Edit</a>
-                            <a class="btn btn-secondary" href="{% url 'delete_comment' comment.commentid %}">Delete</a>
+                        (    
+                            <a href="{% url 'edit_comment' comment.commentid %}">Edit</a>
+                        |
+                            <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
+                        )
                             <br>
                         {% endif %}
                     {% endif %}
+                    </p>
                     <p>answered : {{comment.date}}</p>
                 </div>
             </div>

@@ -5,14 +5,19 @@ from django.http import HttpResponseRedirect
 from webBoard.core.forms import *
 from webBoard.core.models import *
 import datetime
+from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 def home(request):
     count = User.objects.count()
     topic_all = Topic.objects.all()
-    comment_all = Comment.objects.all()
+    time_create_topic = Create.objects.all()
+
+    zip_topic_user = zip(topic_all,time_create_topic)
+
     return render(request, 'home.html', {
-        'count': count,'topic_all': topic_all , 'comment_all' : comment_all,
+        'count': count,'topic_all': topic_all , 'zip_topic_user' : zip_topic_user
     })
 
 def signup(request):
@@ -88,10 +93,17 @@ def view_topic(request,topic_id):
 
     time_create_topic = Create.objects.get(userid=select_topic.user_name,topicid=select_topic)
 
-    print(time_create_topic)
+    if not request.user.is_authenticated:
+         return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic, 
+                        'time_create_topic':time_create_topic})
+    else:
+        try:
+            user_like = LikeTopic.objects.get(userid=request.user,like_topicid=select_topic)
+        except LikeTopic.DoesNotExist:
+            user_like = None
 
-    return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic, 
-    'time_create_topic':time_create_topic})
+        return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic, 
+                        'time_create_topic':time_create_topic, 'user_like':user_like})
 
 def edit_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
@@ -132,6 +144,12 @@ def edit_comment(request, comment_id):
 
     time_create_topic = Create.objects.get(userid=select_topic.user_name,topicid=select_topic)
 
+    try:
+        user_like = LikeTopic.objects.get(userid=request.user,like_topicid=select_topic)
+    except LikeTopic.DoesNotExist:
+        user_like = None
+
+
     if request.method == 'POST':
         edit_content = request.POST.get('content')
         edit_comment = Comment.objects.filter(commentid=comment_id).update(content=edit_content)
@@ -141,7 +159,7 @@ def edit_comment(request, comment_id):
 
     
     return render(request, 'edit_comment.html', { 'select_topic' : select_topic, 
-    'comment_topic' : comment_topic, 
+    'comment_topic' : comment_topic, 'user_like':user_like,
     'select_comment' : select_comment, 'time_create_topic' : time_create_topic})
 
 def delete_comment(request, comment_id):
@@ -157,5 +175,37 @@ def delete_comment(request, comment_id):
         url_redirect = '/topic/' + str(topic_id)
         return HttpResponseRedirect(url_redirect)
 
-    
+def like_topic(request, topic_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/accounts/login")
 
+    else:
+        select_topic = Topic.objects.get(topicid=topic_id)
+        create_user_like_topic = LikeTopic.objects.create(userid=request.user,like_topicid=select_topic)
+
+        like_topic = Topic.objects.get(topicid=topic_id).like
+        like_topic += 1
+
+        increase_like_topic = Topic.objects.filter(topicid=topic_id).update(like=like_topic)
+
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
+
+
+
+def unlike_topic(request, topic_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/accounts/login")
+
+    else:
+        select_topic = Topic.objects.get(topicid=topic_id)
+        create_user_like_topic = LikeTopic.objects.get(userid=request.user,like_topicid=select_topic).delete()
+
+
+        like_topic = Topic.objects.get(topicid=topic_id).like
+        like_topic -= 1
+
+        decrease_like_topic = Topic.objects.filter(topicid=topic_id).update(like=like_topic)
+
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
