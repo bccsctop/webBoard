@@ -29,7 +29,7 @@ def signup(request):
 
 def create_topic(request):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect("accounts/login")
+        return HttpResponseRedirect("/accounts/login")
     elif request.method == 'POST':
         form = create_topic_form(request.POST)
         if form.is_valid():
@@ -58,7 +58,7 @@ def create_comment(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
 
     if not request.user.is_authenticated:
-        return HttpResponseRedirect("accounts/login")
+        return HttpResponseRedirect("/accounts/login")
     elif request.method == 'POST':
         tpid = Topic.objects.get(topicid= topic_id)
         form = create_comment_form(request.POST)
@@ -96,7 +96,7 @@ def view_topic(request,topic_id):
 def edit_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
     if not request.user.is_authenticated:
-        return HttpResponseRedirect("accounts/login")
+        return HttpResponseRedirect("/accounts/login")
     elif request.method == 'POST':
         form = edit_topic_form(request.POST)
         if form.is_valid():
@@ -113,7 +113,7 @@ def edit_topic(request,topic_id):
 
 def delete_topic(request, topic_id):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect("accounts/login")
+        return HttpResponseRedirect("/accounts/login")
     else:
         delete_topic = Topic.objects.filter(topicid=topic_id).delete()
         delete_comment = Comment.objects.filter(comtopicid=topic_id).delete()
@@ -146,7 +146,7 @@ def edit_comment(request, comment_id):
 
 def delete_comment(request, comment_id):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect("accounts/login")
+        return HttpResponseRedirect("/accounts/login")
     else:
         get_id_topic = Comment.objects.get(commentid=comment_id)
         select_topic = Topic.objects.get(title=get_id_topic.comtopicid)
