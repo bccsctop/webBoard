@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Homepage</h2>
-    <p>Welcome to Web Board , {% if user.is_authenticated %}{{ user.username  }}{% else %}visitor{% endif %}!</p>
-    <p>
-        <strong>Total users registered :</strong> {{ count }}
-    </p>
 
     <form action="{% url 'create_topic' %}">
-        <input type="submit" value="Create Topic" />
+        <h1>All Topic</h1>
+        <input type="submit" class="btn btn-success" value="Create Topic" />
     </form>
-    <div>
+</div>
 
-        <ul class="list-group">
-            {% for item in topic_all %}
-                <a href="{% url 'view_topic' item.topicid %}">{{ item.title }}</a>
-                <br><br>
-            {% endfor %}
-        </ul>
+<div class="container">
+    <br>
+    <ul class="list-group">
+        {% for item in topic_all %}
+            <div class="card w-75">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <a href="{% url 'view_topic' item.topicid %}" class="btn btn-primary">See More</a>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    </ul>
+</div>
 
-    </div>
+    
 {% endblock %}

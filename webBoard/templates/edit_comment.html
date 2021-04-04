@@ -2,46 +2,59 @@
 
 {% block content %}
 
-    <h1>{{select_topic}}</h1>
-    <ul>{{select_topic.content}}</ul>
+<div class="card w-100">
+    <div class="card-body">
 
-    <strong>account : {{ select_topic.user_name }}</strong> 
-
-    {% if user.is_authenticated %}
-        {% if user.username|striptags == select_topic.user_name|striptags %}
-            <a href="{% url 'edit_topic' select_topic.topicid %}">Edit</a> /
-            <a href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
-        {% endif %}
-    {% endif %}
-    <p>asked : {{time_create_topic}}</p>
-
+        <h1>{{select_topic}}</h1>
+        <ul>{{select_topic.content}}</ul>
+        <hr>
+        <div style="float: right;">
+                <strong>account : {{ select_topic.user_name }}</strong> 
+                {% if user.is_authenticated %}
+                    {% if user.username|striptags == select_topic.user_name|striptags %}
+                        <a class="btn btn-primary" href="{% url 'edit_topic' select_topic.topicid %}">Edit</a>
+                        <a class="btn btn-secondary" href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
+                        <p style="text-align:right;">asked : {{time_create_topic}}</p>
+                    {% endif %}
+                {% endif %}
+        </div>
+    </div>
+</div>
     <br>
 
-    <h4>Comment</h4>
-    <ul class="list-group">
+    <strong>Comment</strong><br>
+    
+    <ul>
         {% for comment in comment_topic %}
-            <p>{{ comment }}</p>
-            <strong>account : {{comment.comuserid}}</strong>
-            {% if user.is_authenticated %}
-                {% if user.username|striptags == comment.comuserid|striptags %}
-                    <a href="{% url 'edit_comment' comment.commentid %}">Edit</a>
-                    <a href="{% url 'delete_comment' comment.commentid %}">/ Delete</a>
-                    <br>
-                {% endif %}
-            {% endif %}
-            <p>answered : {{comment.date}}</p>
+            <div class="card w-100">
+                <div class="card-body">
+                    <p>{{ comment }}</p>
+                    <hr>
+                    <strong>account : {{comment.comuserid}}</strong>
+                    {% if user.is_authenticated %}
+                        {% if user.username|striptags == comment.comuserid|striptags %}
+                            <a class="btn btn-primary" href="{% url 'edit_comment' comment.commentid %}">Edit</a>
+                            <a class="btn btn-secondary" href="{% url 'delete_comment' comment.commentid %}">Delete</a>
+                            <br>
+                        {% endif %}
+                    {% endif %}
+                    <p>answered : {{comment.date}}</p>
+                </div>
+            </div>
             <br>
         {% endfor %}
+            
     </ul>
     <br>
 
     <h4>Edit Comment</h4>
+    <ul>
         <form method="POST" action="{% url 'edit_comment' select_comment.commentid %}">
             {% csrf_token %}
             <textarea style="font-size: 12pt" rows="4" cols="50" name="content">{{select_comment}}</textarea>
             <br>
 
-            <button type="submit">Done</button>
+            <button type="submit" class="btn btn-success">Done</button>
         </form>
-
+    </ul>
 {% endblock %}
