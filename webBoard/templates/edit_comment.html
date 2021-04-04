@@ -13,8 +13,9 @@
             <a href="{% url 'delete_topic' select_topic.topicid %}">Delete</a>
         {% endif %}
     {% endif %}
+    <p>asked : {{time_create_topic}}</p>
 
-    <br><br>
+    <br>
 
     <h4>Comment</h4>
     <ul class="list-group">
@@ -28,6 +29,8 @@
                     <br>
                 {% endif %}
             {% endif %}
+            <p>answered : {{comment.date}}</p>
+            <br>
         {% endfor %}
     </ul>
     <br>

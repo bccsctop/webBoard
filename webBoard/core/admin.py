@@ -5,5 +5,4 @@ from webBoard.core.models import *
 admin.site.register(Topic)
 admin.site.register(Comment)
 admin.site.register(Create)
-admin.site.register(Write)
 admin.site.register(Tag)

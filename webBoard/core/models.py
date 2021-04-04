@@ -16,6 +16,7 @@ class Comment (models.Model):
     commentid = models.AutoField(primary_key=True)
     content = models.CharField(max_length=150)
     like = models.IntegerField()
+    date = models.DateTimeField(null=True)
     comuserid = models.ForeignKey(User, on_delete=models.CASCADE)
     comtopicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
@@ -25,18 +26,10 @@ class Comment (models.Model):
 class Create (models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
     topicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    date = models.DateTimeField(null=True, auto_now_add=True)
+    date = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.date
-
-class Write (models.Model):
-    userid = models.ForeignKey(User, on_delete=models.CASCADE)
-    commentid = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    date = models.DateTimeField(null=True, auto_now_add=True)
-
-    def __str__(self):
-        return self.date
+        return str(self.date.strftime("%B %d, %Y, %H:%M %p"))
 
 class Tag (models.Model):
     topicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
