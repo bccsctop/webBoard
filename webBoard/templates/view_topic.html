@@ -37,39 +37,48 @@
     <br>
 
     <strong>Comment</strong><br>
-    
     <ul>
-        {% for comment in comment_topic %}
+        {% for comment, user_like in zip_com_user %}
             <div class="card w-100">
                 <div class="card-body">
-                    <p>{{ comment }}</p>
+                    <p>{{ comment.content }}</p>
                     <hr>
-                    <p>By : {{comment.comuserid}}
-                    {% if user.is_authenticated %}
-                        {% if user.username|striptags == comment.comuserid|striptags %}
-                        (
-                            <a href="{% url 'edit_comment' comment.commentid %}">Edit</a>
-                        |
-                            <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
-                        )
-                            <br>
-                        {% endif %}
+                    {% if user_like %}
+                        <a class="btn btn-outline-primary" href="{% url 'unlike_comment' comment.commentid %}">Unlike</a>
+                        - {{ comment.like }} Likes
+                    {% else %}
+                        <a class="btn btn-primary" href="{% url 'like_comment' comment.commentid %}">Like</a>
+                        - {{ comment.like }} Likes
                     {% endif %}
-                    </p>
-                    <p>answered : {{comment.date}}</p>
+
+                    <div style="float: right;">
+                        <p>By : {{comment.comuserid}}
+                        {% if user.is_authenticated %}
+                            {% if user.username|striptags == comment.comuserid|striptags %}
+                            (
+                                <a href="{% url 'edit_comment' comment.commentid %}">Edit</a>
+                            |
+                                <a href="{% url 'delete_comment' comment.commentid %}">Delete</a>
+                            )
+                                <br>
+                            {% endif %}
+                        {% endif %}
+                        </p>
+                        <p style="text-align:right;">answered : {{comment.date}}</p>
+                    </div>
                 </div>
             </div>
             <br>
-        {% endfor %}
-            
+        {% endfor %}     
     </ul>
+
     <br>
 
     <strong>Create Comment</strong>
     <ul>
         <form method="POST" action="{% url 'create_comment' select_topic.topicid %}">
             {% csrf_token %}
-            <textarea style="font-size: 12pt" rows="4" cols="50" name="content">{{select_comment}}</textarea>
+            <textarea style="font-size: 12pt" rows="4" cols="50" name="content"></textarea>
             <br>
 
             <button type="submit" class="btn btn-success">Create</button>

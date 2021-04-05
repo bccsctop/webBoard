@@ -21,7 +21,7 @@ class Comment (models.Model):
     comtopicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.content
+        return str(self.commentid)
 
 class Create (models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -48,6 +48,7 @@ class LikeTopic(models.Model):
 class LikeComment(models.Model):
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
     like_commentid = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    topicid = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.userid)

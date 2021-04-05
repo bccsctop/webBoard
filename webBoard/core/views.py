@@ -102,8 +102,32 @@ def view_topic(request,topic_id):
         except LikeTopic.DoesNotExist:
             user_like = None
 
-        return render(request, 'view_topic.html', { 'select_topic' : select_topic, 'comment_topic' : comment_topic, 
-                        'time_create_topic':time_create_topic, 'user_like':user_like})
+        user_like_comment = LikeComment.objects.filter(topicid=topic_id,userid=request.user)
+
+        list_comment = []
+        list_user_like = []
+        list_check = []
+
+        for i in comment_topic:
+            print(i.commentid) 
+            list_comment.append(str(i.commentid)) 
+        
+        for j in user_like_comment:
+            print(j.like_commentid)
+            list_user_like.append(str(j.like_commentid))
+
+        for check in list_comment:
+            if check in list_user_like:
+                print('True')
+                list_check.append(True)
+            else:
+                print('False')
+                list_check.append(False)
+
+        zip_com_user = zip(comment_topic, list_check)
+
+        return render(request, 'view_topic.html', { 'select_topic' : select_topic,
+                        'time_create_topic':time_create_topic, 'user_like':user_like, 'zip_com_user':zip_com_user})
 
 def edit_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
@@ -149,6 +173,27 @@ def edit_comment(request, comment_id):
     except LikeTopic.DoesNotExist:
         user_like = None
 
+    user_like_comment = LikeComment.objects.filter(topicid=topic_id,userid=request.user)
+
+    list_comment = []
+    list_user_like = []
+    list_check = []
+
+    for i in comment_topic:
+        list_comment.append(str(i.commentid))
+    
+    for j in user_like_comment:
+        list_user_like.append(str(j.like_commentid))
+
+    for check in list_comment:
+        if check in list_user_like:
+            print('True')
+            list_check.append(True)
+        else:
+            print('False')
+            list_check.append(False)
+
+    zip_com_user = zip(comment_topic, list_check)
 
     if request.method == 'POST':
         edit_content = request.POST.get('content')
@@ -159,7 +204,7 @@ def edit_comment(request, comment_id):
 
     
     return render(request, 'edit_comment.html', { 'select_topic' : select_topic, 
-    'comment_topic' : comment_topic, 'user_like':user_like,
+    'comment_topic' : comment_topic, 'user_like':user_like, 'zip_com_user':zip_com_user,
     'select_comment' : select_comment, 'time_create_topic' : time_create_topic})
 
 def delete_comment(request, comment_id):
@@ -199,13 +244,65 @@ def unlike_topic(request, topic_id):
 
     else:
         select_topic = Topic.objects.get(topicid=topic_id)
-        create_user_like_topic = LikeTopic.objects.get(userid=request.user,like_topicid=select_topic).delete()
+        delete_user_like_topic = LikeTopic.objects.get(userid=request.user,like_topicid=select_topic).delete()
 
 
         like_topic = Topic.objects.get(topicid=topic_id).like
         like_topic -= 1
 
         decrease_like_topic = Topic.objects.filter(topicid=topic_id).update(like=like_topic)
+
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
+
+def like_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/accounts/login")
+
+    else:
+        select_comment = Comment.objects.get(commentid=comment_id)
+        get_id_topic = Comment.objects.get(commentid=comment_id)
+        select_topic = Topic.objects.get(title=get_id_topic.comtopicid)
+
+        topic_id = select_topic.topicid
+
+        create_user_like_comment = LikeComment.objects.create(userid=request.user, 
+                                                                like_commentid=select_comment, 
+                                                                topicid=select_topic)
+
+        
+        like_comment = Comment.objects.get(commentid=comment_id).like
+        like_comment += 1
+
+        increase_like_topic = Comment.objects.filter(commentid=comment_id).update(like=like_comment)
+
+        print(increase_like_topic)
+
+        url_redirect = '/topic/' + str(topic_id)
+        return HttpResponseRedirect(url_redirect)
+
+
+
+def unlike_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/accounts/login")
+
+    else:
+        select_comment = Comment.objects.get(commentid=comment_id)
+        get_id_topic = Comment.objects.get(commentid=comment_id)
+        select_topic = Topic.objects.get(title=get_id_topic.comtopicid)
+
+        topic_id = select_topic.topicid
+
+        delete_user_like_comment = LikeComment.objects.get(userid=request.user, 
+                                                                like_commentid=select_comment, 
+                                                                topicid=select_topic).delete()
+        
+        print(delete_user_like_comment)
+        like_comment = Comment.objects.get(commentid=comment_id).like
+        like_comment -= 1
+
+        decrease_like_topic = Comment.objects.filter(commentid=comment_id).update(like=like_comment)
 
         url_redirect = '/topic/' + str(topic_id)
         return HttpResponseRedirect(url_redirect)

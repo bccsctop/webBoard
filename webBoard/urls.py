@@ -22,13 +22,21 @@ urlpatterns = [
     path('', views.home , name='home'),
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('django.contrib.auth.urls')),
+
     path('create_topic', views.create_topic, name = 'create_topic'),
     path('create_comment/<str:topic_id>', views.create_comment, name = 'create_comment'),
+
     path('topic/<str:topic_id>', views.view_topic, name = 'view_topic'),
+
     path('edit_topic/<str:topic_id>', views.edit_topic, name = 'edit_topic'),
-    path('delete_topic/<str:topic_id>', views.delete_topic, name = 'delete_topic'),
     path('edit_comment/<str:comment_id>', views.edit_comment, name = 'edit_comment'),
+
+    path('delete_topic/<str:topic_id>', views.delete_topic, name = 'delete_topic'),
     path('delete_comment/<str:comment_id>', views.delete_comment, name = 'delete_comment'),
+
     path('like_topic/<str:topic_id>', views.like_topic, name = 'like_topic'),
     path('unlike_topic/<str:topic_id>', views.unlike_topic, name = 'unlike_topic'),
+
+    path('like_comment/<str:comment_id>', views.like_comment, name = 'like_comment'),
+    path('unlike_comment/<str:comment_id>', views.unlike_comment, name = 'unlike_comment'),
 ]
