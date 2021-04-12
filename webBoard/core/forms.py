@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from webBoard.core.models import Topic , Comment
+from webBoard.core.models import Topic , Comment, Tag
 
 class create_topic_form(forms.ModelForm):
     class Meta:
@@ -31,3 +31,13 @@ class EditTopicForm(ModelForm):
     class Meta:
         model = Topic
         fields = ['title', 'content']
+
+class create_topic_tag_form(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['tag']
+
+class TopicTagForm(ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['tag']
