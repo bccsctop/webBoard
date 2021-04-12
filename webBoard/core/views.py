@@ -17,11 +17,12 @@ def home(request):
     count = User.objects.count()
     topic_all = Topic.objects.all()
     time_create_topic = Create.objects.all()
+    tags_topic = Tag.objects.all()
 
     zip_topic_user = zip(topic_all,time_create_topic)
 
     return render(request, 'home.html', {
-        'count': count,'topic_all': topic_all , 'zip_topic_user' : zip_topic_user
+        'count': count,'topic_all': topic_all , 'zip_topic_user' : zip_topic_user, 'tags_topic': tags_topic
     })
 
 def signup(request):
@@ -104,6 +105,8 @@ def view_topic(request,topic_id):
 
     comment_topic = Comment.objects.filter(comtopicid=topic_id)
 
+    tags_topic = Tag.objects.filter(topicid=topic_id)
+
     time_create_topic = Create.objects.get(userid=select_topic.user_name,topicid=select_topic)
 
     if not request.user.is_authenticated:
@@ -120,6 +123,7 @@ def view_topic(request,topic_id):
         list_comment = []
         list_user_like = []
         list_check = []
+        list_tag = []
 
         for i in comment_topic:
             print(i.commentid) 
@@ -139,8 +143,12 @@ def view_topic(request,topic_id):
 
         zip_com_user = zip(comment_topic, list_check)
 
+        for tag in tags_topic:
+            list_tag.append(tag)
+
         return render(request, 'view_topic.html', { 'select_topic' : select_topic,
-                        'time_create_topic':time_create_topic, 'user_like':user_like, 'zip_com_user':zip_com_user})
+                        'time_create_topic':time_create_topic, 'user_like':user_like, 
+                        'zip_com_user':zip_com_user, 'list_tag': list_tag})
 
 def edit_topic(request,topic_id):
     select_topic = Topic.objects.get(topicid=topic_id)
@@ -319,3 +327,17 @@ def unlike_comment(request, comment_id):
 
         url_redirect = '/topic/' + str(topic_id)
         return HttpResponseRedirect(url_redirect)
+
+
+def show_tag(request, tag):
+
+    topic_tag = Topic.objects.filter(tag__tag=tag)
+    time_create_topic = Create.objects.filter(topicid__tag__tag=tag)
+
+    zip_topic_user = zip(topic_tag,time_create_topic)
+
+    return render(request, 'tag.html', {
+        'topic_all': topic_tag , 
+        'zip_topic_user' : zip_topic_user,
+        'tag': tag
+    })
