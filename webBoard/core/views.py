@@ -8,6 +8,10 @@ import datetime
 from django.shortcuts import get_object_or_404
 
 
+all_tags = ['Book', 'Business', 'Cartoon', 'Cosmetic', 'communication', 'Electronic Devices', 'Education', 
+            'Entertainment', 'Friend', 'Food', 'Family', 'Game', 'Healthy', 'Love', 'Life style', 
+            'Music', 'Movie', 'Social', 'Social network', 'Sport', 'Travel', 'Vehicle']
+
 # Create your views here.
 def home(request):
     count = User.objects.count()
@@ -39,6 +43,7 @@ def create_topic(request):
         form = create_topic_form(request.POST)
         if form.is_valid():
             topic = form.save(commit=False)
+
             create_title = request.POST.get('title')
             create_content = request.POST.get('content')
 
@@ -48,15 +53,23 @@ def create_topic(request):
             topic.like = 0
             topic.save()
 
+            tag = request.POST.getlist('tags')
+
+            for i in tag:
+                create_tag_topic = Tag.objects.create(topicid=topic,
+                                                        tag=i)
+
             #time create topic
             create_time_topic = Create.objects.create(userid=request.user,
                                                         topicid=topic,
                                                         date=datetime.datetime.now())
-        return HttpResponseRedirect("/")
+            return HttpResponseRedirect("/")
     else:
         form = create_topic_form()
+        form2 = create_topic_tag_form()
         return render(request, 'create_topic.html', {
-        'form': form
+        'form': form,
+        'all_tags': all_tags
     })
 
 def create_comment(request,topic_id):
