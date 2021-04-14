@@ -14,8 +14,8 @@
 
     <div class="container">
         <h5>Tags</h5>
-        {% for tag in tags_topic %}
-            <a href="{% url 'show_tag' tag.tag %}" class="btn btn-outline-secondary">{{ tag.tag }}</a> 
+        {% for tag in all_tags %}
+            <a href="{% url 'show_tag' tag %}" class="btn btn-outline-secondary">{{ tag }}</a> 
         {% endfor %}
     </div>
     
