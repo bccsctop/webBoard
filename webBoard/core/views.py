@@ -17,12 +17,11 @@ def home(request):
     count = User.objects.count()
     topic_all = Topic.objects.all()
     time_create_topic = Create.objects.all()
-    tags_topic = Tag.objects.all()
 
     zip_topic_user = zip(topic_all,time_create_topic)
 
     return render(request, 'home.html', {
-        'count': count,'topic_all': topic_all , 'zip_topic_user' : zip_topic_user, 'tags_topic': tags_topic
+        'count': count,'topic_all': topic_all , 'zip_topic_user' : zip_topic_user, 'all_tags': all_tags
     })
 
 def signup(request):
@@ -67,7 +66,6 @@ def create_topic(request):
             return HttpResponseRedirect("/")
     else:
         form = create_topic_form()
-        form2 = create_topic_tag_form()
         return render(request, 'create_topic.html', {
         'form': form,
         'all_tags': all_tags
